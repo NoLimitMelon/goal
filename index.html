@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto-Incrementing Stream Goal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&family=Teko:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0e0e10;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    #goal-container {
+      width: 600px;
+      padding: 20px;
+      background: rgba(24, 24, 27, 0.8);
+      border-radius: 16px;
+      border: 1px solid #2d2d35;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    #title {
+      font-family: 'Teko', sans-serif;
+      font-size: 32px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+
+    #progress-bar {
+      position: relative;
+      background-color: #1f1f23;
+      border-radius: 12px;
+      height: 50px;
+      border: 2px solid #3a3a40;
+      overflow: hidden;
+    }
+
+    #bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #772CE8 0%, #9146FF 100%);
+      box-shadow: 0 0 12px rgba(145, 70, 255, 0.8);
+      transition: width 0.4s ease-in-out;
+    }
+
+    #text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 20px;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+      pointer-events: none;
+      width: 100%;
+      text-align: center;
+    }
+
+    #subtext {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #adadb8;
+      text-transform: uppercase;
+    }
+
+    .controls {
+      margin-top: 25px;
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      background: #9146FF;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #772CE8;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="goal-container">
+    <div id="title">ROAD TO <span id="goal-target-title">200</span> FOLLOWERS!</div>
+    
+    <div id="progress-bar">
+      <div id="bar"></div>
+      <div id="text">
+        <span id="current">155</span> / <span id="goal">200</span> (<span id="percent">78%</span>)
+      </div>
+    </div>
+    
+    <div id="subtext">
+      <span id="amount-left">45</span> followers to next goal!
+    </div>
+  </div>
+
+  <!-- Interactive controls to test/use locally -->
+  <div class="controls">
+    <button onclick="addFollower(1)">+1 Follower</button>
+    <button onclick="addFollower(10)">+10 Followers</button>
+    <button onclick="resetGoal()">Reset to 155 / 200</button>
+  </div>
+
+  <script>
+    // Initial State Variables
+    let currentFollowers = 155;
+    let targetGoal = 200;
+
+    function updateWidget() {
+      // Auto-Increment Logic: Add +50 to goal when target is hit
+      while (currentFollowers >= targetGoal) {
+        targetGoal += 50;
+      }
+
+      const percentage = Math.min(Math.round((currentFollowers / targetGoal) * 100), 100);
+      const remaining = Math.max(targetGoal - currentFollowers, 0);
+
+      // Render values to DOM
+      document.getElementById('current').innerText = currentFollowers;
+      document.getElementById('goal').innerText = targetGoal;
+      document.getElementById('goal-target-title').innerText = targetGoal;
+      document.getElementById('percent').innerText = percentage + '%';
+      document.getElementById('amount-left').innerText = remaining;
+
+      // Animate progress bar fill
+      document.getElementById('bar').style.width = percentage + '%';
+    }
+
+    function addFollower(amount) {
+      currentFollowers += amount;
+      updateWidget();
+    }
+
+    function resetGoal() {
+      currentFollowers = 155;
+      targetGoal = 200;
+      updateWidget();
+    }
+
+    // Initial render
+    updateWidget();
+  </script>
+</body>
+</html>
